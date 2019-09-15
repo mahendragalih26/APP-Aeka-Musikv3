@@ -16,7 +16,7 @@ class modalEdit extends Component {
         stock: props.dataProduct.stock,
         id_branch: props.dataProduct.id_branch,
         id_category: props.dataProduct.id_category,
-        img: "/sub/violin"
+        MyImage: "/sub/violin"
       },
       dataProduct: [],
       resModal: false

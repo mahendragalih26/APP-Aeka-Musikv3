@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Navbar } from "react-bootstrap";
+import { Navbar, Nav } from "react-bootstrap";
 
 class NavbarTop extends Component {
   // state = {  }
@@ -18,16 +18,34 @@ class NavbarTop extends Component {
           </a>
 
           <Navbar.Brand href="#home"></Navbar.Brand>
-          <Navbar.Toggle />
+
           <Navbar.Collapse className="justify-content-end">
             <Navbar.Text>
               {/* Signed in as: <a href="#login">Mark Otto</a> */}
-              <a
-                href="#login"
-                style={{ textDecoration: "none", color: "black" }}
+              <Nav.Link onClick={this.loginShow} className="ml-1">
+                <i className="fa fa-user"></i>{" "}
+                <span style={{ fontSize: 18 }}>&nbsp;Login</span>
+              </Nav.Link>
+            </Navbar.Text>
+            <Navbar.Text>
+              <Nav.Link
+                onClick={this.openNav}
+                onMouseOver={this.loginClose}
+                className="ml-4"
               >
-                Login
-              </a>
+                <i className="fa fa-heart"></i>
+                <span style={{ fontSize: 18 }}>&nbsp;&nbsp;Wishlist</span>
+              </Nav.Link>
+            </Navbar.Text>
+            <Navbar.Text>
+              <Nav.Link
+                onClick={this.openNav}
+                onMouseOver={this.loginClose}
+                className="ml-4"
+              >
+                <i className="fa fa-shopping-cart"></i>
+                <span style={{ fontSize: 18 }}>&nbsp;&nbsp;Cart</span>
+              </Nav.Link>
             </Navbar.Text>
           </Navbar.Collapse>
         </Navbar>

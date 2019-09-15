@@ -21,7 +21,9 @@ const ModalDelete = props => {
           <p>Apakah anda yakin ingin menghpus data ini........</p>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={props.deleteData}>Close</Button>
+          <Button variant="danger" onClick={props.deleteData}>
+            Delete
+          </Button>
           <Button onClick={props.hide}>Close</Button>
         </Modal.Footer>
       </Modal>

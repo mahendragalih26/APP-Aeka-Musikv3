@@ -17,7 +17,7 @@ class modalAdd extends Component {
         stock: "",
         id_branch: "",
         id_category: "",
-        img: "/sub/violin"
+        MyImage: "/sub/violin"
       },
       dataProduct: [],
       resModal: false
@@ -50,12 +50,10 @@ class modalAdd extends Component {
     });
   };
 
-  getIdProduct = () => {};
-
   render() {
-    console.log("Data Form Main : ", this.state.formMain);
-    console.log("Data Form Product : ", this.state.formProduct);
-    console.log("Data Form id : ", this.state.id_product);
+    // console.log("Data Form Main : ", this.state.formMain);
+    // console.log("Data Form Product : ", this.state.formProduct);
+    // console.log("Data Form id : ", this.state.id_product);
     return (
       <Modal
         size="lg"
@@ -165,6 +163,18 @@ class modalAdd extends Component {
                 />
               </Col>
             </Form.Group>
+            {/* <Form.Group as={Row} controlId="formPlaintextPassword">
+              <Form.Label column sm="2">
+                Image
+              </Form.Label>
+              <Col sm="6">
+                <Form.Control
+                  type="file"
+                  name="MyImage"
+                  onChange={this.handleChange}
+                />
+              </Col>
+            </Form.Group> */}
           </Modal.Body>
           <Modal.Footer style={{ borderTop: "none" }}>
             <Button
