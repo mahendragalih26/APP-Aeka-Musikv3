@@ -22,7 +22,7 @@ class SearchBar extends Component {
             style={{ maxWidth: "95%" }}
           >
             <Row>
-              <Col sm={11}>
+              <Col>
                 <div style={{ position: "relative" }}>
                   <div>
                     <FormControl
@@ -56,30 +56,6 @@ class SearchBar extends Component {
                     />
                   </div>
                 </div>
-              </Col>
-              <Col sm={1}>
-                <InputGroup.Append
-                  style={{ marginLeft: "-24px" }}
-                  className="float-right"
-                >
-                  <Button
-                    variant="outline-light"
-                    style={{
-                      boxShadow: "1px 3px 4px 2px rgba(0, 0, 0, 0.2)",
-                      color: "#949494"
-                    }}
-                    className="ml-2"
-                  >
-                    {/* <FontAwesomeIcon icon={faCog} /> */}
-                    <img
-                      alt=""
-                      src="./options.png"
-                      // width="140px"
-                      // height="50px"
-                      className="d-inline-block align-top"
-                    />
-                  </Button>
-                </InputGroup.Append>
               </Col>
             </Row>
           </Container>

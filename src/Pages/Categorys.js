@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import SearchBar from "../components/SearchBar";
+// import SearchBar from "../components/SearchBar";
 import CardBar from "../components/Card/Card";
 
 import { connect } from "react-redux";
@@ -23,7 +23,8 @@ class Category extends Component {
     console.log("data API = ", this.props.data.Categorys.categoryList);
     return (
       <div>
-        <SearchBar />
+        {/* <SearchBar /> */}
+        <div className="mt-3"></div>
         <CardBar data={dataStore} />
       </div>
     );
