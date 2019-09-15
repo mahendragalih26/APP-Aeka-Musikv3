@@ -8,7 +8,10 @@ import {
   Image,
   Button,
   ButtonGroup,
-  FormControl
+  FormControl,
+  ButtonToolbar,
+  OverlayTrigger,
+  Tooltip
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import LoginModal from "../Modal/mLogin";
@@ -55,7 +58,17 @@ class NavbarTop extends Component {
                 onMouseOver={this.loginClose}
                 className="ml-1"
               >
-                <i className="fa fa-heart" style={{ fontSize: "20px" }}></i>
+                <OverlayTrigger
+                  placement={"bottom"}
+                  overlay={
+                    <Tooltip id={`tooltip-bottom`}>
+                      Your <strong>Wishlist Product</strong>.
+                    </Tooltip>
+                  }
+                >
+                  <i className="fa fa-heart" style={{ fontSize: "31px" }}></i>
+                </OverlayTrigger>
+
                 {/* <span style={{ fontSize: 18 }}>&nbsp;&nbsp;Wishlist</span> */}
               </Nav.Link>
             </Navbar.Text>
@@ -64,18 +77,38 @@ class NavbarTop extends Component {
                 onClick={() => this.setState({ openCart: true })}
                 className="ml-1"
               >
-                <i
-                  className="fa fa-shopping-cart"
-                  style={{ fontSize: "25px" }}
-                ></i>
                 {/* <span style={{ fontSize: 18 }}>&nbsp;&nbsp;Cart</span> */}
+
+                <OverlayTrigger
+                  placement={"bottom"}
+                  overlay={
+                    <Tooltip id={`tooltip-bottom`}>
+                      Your <strong>Cart Product</strong>.
+                    </Tooltip>
+                  }
+                >
+                  <i
+                    className="fa fa-cart-arrow-down"
+                    style={{ fontSize: "31px" }}
+                  ></i>
+                </OverlayTrigger>
               </Nav.Link>
             </Navbar.Text>
             <Navbar.Text>
               {/* Signed in as: <a href="#login">Mark Otto</a> */}
               <Nav.Link onClick={() => this.openModalLogin()} className="ml-1">
-                <i className="fa fa-user" style={{ fontSize: "25px" }}></i>{" "}
-                {/* <span style={{ fontSize: "25px" }}>&nbsp;Login</span> */}
+                <OverlayTrigger
+                  placement={"bottom"}
+                  overlay={
+                    <Tooltip id={`tooltip-bottom`}>
+                      <strong>LogIn</strong> and get more.
+                    </Tooltip>
+                  }
+                >
+                  <i className="fa fa-user" style={{ fontSize: "31px" }}></i>
+                </OverlayTrigger>
+
+                {/* <span style={{ fontSize: "31px" }}>&nbsp;Login</span> */}
               </Nav.Link>
             </Navbar.Text>
           </Navbar.Collapse>
@@ -89,7 +122,7 @@ class NavbarTop extends Component {
             <div>
               <i
                 className="fa fa-chevron-right"
-                style={{ fontSize: "25px" }}
+                style={{ fontSize: "31px" }}
               ></i>
             </div>
           }
