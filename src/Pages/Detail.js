@@ -9,16 +9,15 @@ import {
   Form,
   Button
 } from "react-bootstrap";
+import SweetAlert from "sweetalert2";
 // import { Link } from "react-router-dom";
 
 import { connect } from "react-redux";
-import {
-  getMainDetail,
-  getCategory,
-  getProduct,
-  deleteMain
-} from "../Publics/Action";
-import ModalEdit from "../components/modalEdit";
+import { getCategory } from "../Publics/Action/category";
+import { getProductsDetail, deleteProduct } from "../Publics/Action/product";
+import { getBranch } from "../Publics/Action/branch";
+import ModalEdit from "../components/Modal/modalEdit";
+import ModalDelete from "../components/Modal/modalDelete";
 
 class Detail extends Component {
   constructor(props) {
@@ -26,51 +25,73 @@ class Detail extends Component {
     this.state = {
       id_detail: this.props.match.params.id,
       openModalEdit: false,
-      dataStore: [],
+      ModalDelete: false,
+      dataProduct: [],
       dataCategory: [],
-      dataProduct: []
+      dataBranch: []
     };
   }
 
   componentDidMount = async () => {
-    await this.props.dispatch(getMainDetail(this.state.id_detail));
     await this.props.dispatch(getCategory());
-    await this.props.dispatch(getProduct());
+    await this.props.dispatch(getProductsDetail(this.state.id_detail));
+    await this.props.dispatch(getBranch());
     this.setState({
-      dataStore: this.props.data.Mains.mainList[0]
+      dataProduct: this.props.data.Products.productsList[0],
+      dataCategory: this.props.data.Categorys.categoryList,
+      dataBranch: this.props.data.Branches.branchList
     });
   };
 
-  openModalEdit(open) {
-    this.setState({ openModalEdit: open });
-  }
-
   DeleteMain = async () => {
-    await this.props.dispatch(deleteMain(this.state.id_detail));
-    // this.setState({
-    //   openModalDelete: false,
-    //   showSuccessModal: true
-    // });
-    setTimeout(() => {
-      this.props.history.push(`/${this.state.dataStore.category}`);
-    }, 3000);
+    await this.props.dispatch(deleteProduct(this.state.id_detail));
+    SweetAlert.fire({
+      title: "Yeayy!",
+      text: `Data has been updated`,
+      type: "success",
+      confirmButtonText: "OK",
+      confirmButtonColor: "#E28935"
+    }).then(() => {
+      setTimeout(() => {
+        this.props.history.push(`/${this.state.dataProduct.category}`);
+      }, 3000);
+    });
+    // setTimeout(() => {
+    //   this.props.history.push(`/${this.state.dataStore.category}`);
+    // }, 3000);
   };
 
+  openModalEdit() {
+    this.setState({ openModalEdit: true });
+  }
+
+  openModalDelete() {
+    this.setState({ ModalDelete: true });
+  }
+
   render() {
-    const { dataStore } = this.state;
-    console.log("data API = ", dataStore);
+    const { dataProduct } = this.state;
+    const { dataCategory } = this.state;
+    const { dataBranch } = this.state;
+    console.log("state deletemodal", this.state.openModalDelete);
+
+    // const [modalShowDelete, setModalDelete] = React.useState(false);
+    console.log("data API = ", dataProduct);
     return (
       <React.Fragment>
-        <Container key={dataStore.id} className="mt-4">
+        <Container key={dataProduct.id} className="mt-4">
           <Row>
             <Col xs={6} md={4}>
               <Card>
-                <Card.Img variant="top" src={`/assets/${dataStore.img}.png`} />
+                <Card.Img
+                  variant="top"
+                  src={`/assets/${dataProduct.img}.png`}
+                />
               </Card>
             </Col>
             <Col xs={6} md={8}>
               <Navbar>
-                <Navbar.Brand href="#home">{dataStore.name}</Navbar.Brand>
+                <Navbar.Brand href="#home">{dataProduct.name}</Navbar.Brand>
                 <Nav className="mr-auto"></Nav>
                 <Form inline>
                   <div>
@@ -86,18 +107,22 @@ class Detail extends Component {
                     </Button>
                   </div>
                   <div>
-                    <a
-                      href="/violin"
-                      onClick={() => this.DeleteMain(this.state.id_detail)}
+                    {/* <a href="/violin" onClick={() => this.openModalDelete()}> */}
+                    <Button
+                      variant="danger"
+                      size="sm"
+                      className="mr-sm-2"
+                      data-toggle="modal"
+                      data-target="#ModalDelete"
+                      onClick={() => this.openModalDelete()}
                     >
-                      <Button variant="danger" size="sm" className="mr-sm-2">
-                        Delete
-                      </Button>
-                    </a>
+                      Delete
+                    </Button>
+                    {/* </a> */}
                   </div>
                 </Form>
               </Navbar>
-              <p>{dataStore.description}</p>
+              <p>{dataProduct.description}</p>
             </Col>
           </Row>
           <Row className="mt-3">
@@ -113,7 +138,7 @@ class Detail extends Component {
                       width="20px"
                       type="text"
                       style={{ borderRadius: "14px" }}
-                      value={dataStore.branch}
+                      value={dataProduct.branch}
                       readOnly
                     />
                   </Col>
@@ -127,7 +152,7 @@ class Detail extends Component {
                       width="20px"
                       type="text"
                       style={{ borderRadius: "14px" }}
-                      value={dataStore.qty}
+                      value={dataProduct.stock}
                       readOnly
                     />
                   </Col>
@@ -141,7 +166,7 @@ class Detail extends Component {
                       width="20px"
                       type="text"
                       style={{ borderRadius: "14px" }}
-                      value={dataStore.price}
+                      value={dataProduct.price}
                       readOnly
                     />
                   </Col>
@@ -152,11 +177,21 @@ class Detail extends Component {
           </Row>
         </Container>
         <ModalEdit
-          id_main={dataStore.id_detail}
-          data={dataStore}
+          id_main={dataProduct.id_detail}
+          dataProduct={dataProduct}
+          key={dataProduct}
+          dataCategory={dataCategory}
+          dataBranch={dataBranch}
           open={this.state.openModalEdit}
           history={this.props.history}
           hide={() => this.setState({ openModalEdit: false })}
+        />
+
+        <ModalDelete
+          deleteData={this.DeleteMain}
+          open={this.state.ModalDelete}
+          history={this.props.history}
+          hide={() => this.setState({ ModalDelete: false })}
         />
       </React.Fragment>
     );

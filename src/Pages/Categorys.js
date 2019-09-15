@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import SearchBar from "../components/SearchBar";
-import CardBar from "../components/Card";
+import CardBar from "../components/Card/Card";
 
 import { connect } from "react-redux";
 
-import { getCategory } from "../Publics/Action";
+import { getCategory } from "../Publics/Action/category";
 
 class Category extends Component {
   state = {

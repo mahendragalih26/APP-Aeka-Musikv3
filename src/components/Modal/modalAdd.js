@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import { Button, Row, Col, Modal, Form } from "react-bootstrap";
-import { addMain, addProduct } from "../Publics/Action";
-import Axios from "axios";
+import SweetAlert from "sweetalert2";
+
+import { addProduct } from "../../Publics/Action/product";
+// import Axios from "axios";
 
 import { connect } from "react-redux";
 
@@ -9,24 +11,20 @@ class modalAdd extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      formProduct: {
-        name: "",
-        id_category: "",
-        description: ""
-      },
       formMain: {
-        id_product: "" || "4",
-        id_branch: "",
-        qty: "",
+        name: "",
         price: "",
-        img: "/sub/violin4"
+        stock: "",
+        id_branch: "",
+        id_category: "",
+        img: "/sub/violin"
       },
-
+      dataProduct: [],
       resModal: false
     };
   }
 
-  handleChangeMain = async e => {
+  handleChange = async e => {
     let newFormMain = { ...this.state.formMain };
     const target = e.target;
     const name = target.name;
@@ -38,32 +36,18 @@ class modalAdd extends Component {
     console.log(this.state.formMain);
   };
 
-  handleChangeProduct = async e => {
-    let newFormProduct = { ...this.state.formProduct };
-    const target = e.target;
-    const name = target.name;
-    const value = target.value;
-    newFormProduct[name] = value;
-    await this.setState({
-      formProduct: newFormProduct
-    });
-    console.log(this.state.formProduct);
-  };
-
   handleSubmit = async e => {
     e.preventDefault();
-    await this.props.dispatch(addProduct(this.state.formProduct));
-
-    // let getMax = Axios.get(`http://localhost:8080/product/max`);
-    // let LastIndex = getMax.data.data[0]["MAX(id)"];
-    // this.setState({ id_product: LastIndex });
-
-    let getMax = await Axios.get(`http://localhost:8080/product/max`);
-    let LastIndex = getMax.data.data[0]["MAX(id)"];
-    this.setState({ id_product: LastIndex });
-    await this.props.dispatch(addMain(this.state.formMain));
-
-    this.props.hide();
+    await this.props.dispatch(addProduct(this.state.formMain));
+    SweetAlert.fire({
+      title: "Yeayy!",
+      text: `Data has been updated`,
+      type: "success",
+      confirmButtonText: "OK",
+      confirmButtonColor: "#E28935"
+    }).then(() => {
+      window.location.reload();
+    });
   };
 
   getIdProduct = () => {};
@@ -94,7 +78,7 @@ class modalAdd extends Component {
                 <Form.Control
                   name="name"
                   type="text"
-                  onChange={this.handleChangeProduct}
+                  onChange={this.handleChange}
                 />
               </Col>
             </Form.Group>
@@ -106,7 +90,7 @@ class modalAdd extends Component {
                 <Form.Control
                   as="select"
                   name="id_category"
-                  onChange={this.handleChangeProduct}
+                  onChange={this.handleChange}
                 >
                   <option selected disabled>
                     Category..
@@ -129,7 +113,7 @@ class modalAdd extends Component {
                 <Form.Control
                   as="select"
                   name="id_branch"
-                  onChange={this.handleChangeMain}
+                  onChange={this.handleChange}
                 >
                   <option selected disabled>
                     Branch..
@@ -151,8 +135,8 @@ class modalAdd extends Component {
               <Col sm="6">
                 <Form.Control
                   type="text"
-                  name="qty"
-                  onChange={this.handleChangeMain}
+                  name="stock"
+                  onChange={this.handleChange}
                 />
               </Col>
             </Form.Group>
@@ -164,7 +148,7 @@ class modalAdd extends Component {
                 <Form.Control
                   type="text"
                   name="price"
-                  onChange={this.handleChangeMain}
+                  onChange={this.handleChange}
                 />
               </Col>
             </Form.Group>
@@ -177,7 +161,7 @@ class modalAdd extends Component {
                   as="textarea"
                   rows="5"
                   name="description"
-                  onChange={this.handleChangeProduct}
+                  onChange={this.handleChange}
                 />
               </Col>
             </Form.Group>
@@ -201,10 +185,25 @@ class modalAdd extends Component {
   }
 }
 
+// const mapDispatchToProps = dispatch => {
+//   return {
+//     addProduct: data => {
+//       dispatch(addProduct(data));
+//     },
+//     deleteProduct: data => {
+//       dispatch(addProduct(data));
+//     }
+//   };
+// };
+
 const mapStateToProps = state => {
   return {
-    data: state
+    dataProduct: state.Products.productsList
   };
 };
 
 export default connect(mapStateToProps)(modalAdd);
+// (
+//   // mapStateToProps,
+//   mapDispatchToProps
+// )

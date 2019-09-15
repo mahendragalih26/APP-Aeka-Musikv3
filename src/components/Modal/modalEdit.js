@@ -1,21 +1,27 @@
 import React, { Component } from "react";
 import { Button, Row, Col, Modal, Form } from "react-bootstrap";
-import { addMain } from "../Publics/Action";
+import { editProduct } from "../../Publics/Action/product";
+import SweetAlert from "sweetalert2";
+
+import { connect } from "react-redux";
 
 class modalEdit extends Component {
   constructor(props) {
     super(props);
     this.state = {
       formData: {
-        id_product: "",
-        id_branch: "",
-        qty: "",
-        price: "",
-        img: "/sub/violin4"
+        price: props.dataProduct.price,
+        name: props.dataProduct.name,
+        description: props.dataProduct.description,
+        stock: props.dataProduct.stock,
+        id_branch: props.dataProduct.id_branch,
+        id_category: props.dataProduct.id_category,
+        img: "/sub/violin"
       },
-      resModal: false,
-      dataDet: this.props.data
+      dataProduct: [],
+      resModal: false
     };
+    console.log("statasasa", props.dataProduct.price);
   }
 
   handleChange = async e => {
@@ -32,16 +38,24 @@ class modalEdit extends Component {
 
   handleSubmit = async e => {
     e.preventDefault();
-    await this.props.dispatch(addMain(this.state.formData));
-    // this.props.hide();
-    // this.resModalShow(true);
-    // setTimeout(() => {
-    //   this.resModalShow(false);
-    // }, 3000);
+    await this.props.dispatch(
+      editProduct(this.props.dataProduct.id, this.state.formData)
+    );
+
+    SweetAlert.fire({
+      title: "Yeayy!",
+      text: `Data has been updated`,
+      type: "success",
+      confirmButtonText: "OK",
+      confirmButtonColor: "#E28935"
+    }).then(() => {
+      window.location.href = `/detail/${this.props.dataProduct.id}`;
+    });
   };
 
   render() {
-    console.log("anjay", this.props.data);
+    console.log("anjay", this.props.dataProduct);
+    console.log("state", this.state.formData);
     return (
       <Modal
         size="lg"
@@ -56,17 +70,21 @@ class modalEdit extends Component {
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <input type="hidden" name="id" value={this.props.data.id}></input>
+            <input
+              type="hidden"
+              name="id"
+              value={this.props.dataProduct.id}
+            ></input>
             <Form.Group as={Row} controlId="formPlaintextPassword">
               <Form.Label column sm="2">
                 Product Name
               </Form.Label>
               <Col sm="10">
                 <Form.Control
-                  name="product"
+                  name="name"
                   type="text"
                   onChange={this.handleChange}
-                  value={this.props.data.name}
+                  defaultValue={this.props.dataProduct.name}
                 />
               </Col>
             </Form.Group>
@@ -77,14 +95,23 @@ class modalEdit extends Component {
               <Col sm="4">
                 <Form.Control
                   as="select"
-                  name="category"
+                  name="id_category"
                   onChange={this.handleChange}
                 >
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
+                  <option
+                    value={this.props.dataProduct.id_category}
+                    selected
+                    disabled
+                  >
+                    {this.props.dataProduct.category}
+                  </option>
+                  {this.props.dataCategory.length > 0 ? (
+                    this.props.dataCategory.map(category => (
+                      <option value={category.id}>{category.name}</option>
+                    ))
+                  ) : (
+                    <h1>Not Found Mamank</h1>
+                  )}
                 </Form.Control>
               </Col>
             </Form.Group>
@@ -95,14 +122,23 @@ class modalEdit extends Component {
               <Col sm="4">
                 <Form.Control
                   as="select"
-                  name="branch"
+                  name="id_branch"
                   onChange={this.handleChange}
                 >
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
+                  <option
+                    value={this.props.dataProduct.id_branch}
+                    selected
+                    disabled
+                  >
+                    {this.props.dataProduct.branch}
+                  </option>
+                  {this.props.dataBranch.length > 0 ? (
+                    this.props.dataBranch.map(branch => (
+                      <option value={branch.id}>{branch.name}</option>
+                    ))
+                  ) : (
+                    <h1>Not Found Mamank</h1>
+                  )}
                 </Form.Control>
               </Col>
             </Form.Group>
@@ -113,9 +149,9 @@ class modalEdit extends Component {
               <Col sm="6">
                 <Form.Control
                   type="text"
-                  name="qty"
+                  name="stock"
                   onChange={this.handleChange}
-                  value={this.props.data.qty}
+                  defaultValue={this.props.dataProduct.stock}
                 />
               </Col>
             </Form.Group>
@@ -128,7 +164,7 @@ class modalEdit extends Component {
                   type="text"
                   name="price"
                   onChange={this.handleChange}
-                  value={this.props.data.price}
+                  defaultValue={this.props.dataProduct.price}
                 />
               </Col>
             </Form.Group>
@@ -142,7 +178,7 @@ class modalEdit extends Component {
                   rows="5"
                   name="description"
                   onChange={this.handleChange}
-                  value={this.props.data.description}
+                  defaultValue={this.props.dataProduct.description}
                 />
               </Col>
             </Form.Group>
@@ -166,4 +202,11 @@ class modalEdit extends Component {
   }
 }
 
-export default modalEdit;
+// export default modalEdit;
+const mapStateToProps = state => {
+  return {
+    data: state.Products
+  };
+};
+
+export default connect(mapStateToProps)(modalEdit);

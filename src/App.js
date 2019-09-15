@@ -3,8 +3,8 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "./Publics/store";
 
-import NavbarTop from "./components/NavbarTop";
-import NavbarBot from "./components/NavbarBot";
+import NavbarTop from "./components/Navbar/NavbarTop";
+import NavbarBot from "./components/Navbar/NavbarBot";
 
 import Categorys from "./Pages/Categorys";
 import Mains from "./Pages/Mains";
