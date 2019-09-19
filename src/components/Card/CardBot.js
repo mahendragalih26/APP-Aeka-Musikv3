@@ -1,13 +1,18 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { Row, Button, Container, Col, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 import ModalAdd from "../Modal/modalAdd";
 
 class cardBot extends Component {
-  state = {
-    openModal: false
-  };
+  constructor() {
+    super();
+    this.state = {
+      openModal: false,
+      role: localStorage.getItem("level") === "admin",
+      status_user: localStorage.getItem("token") !== null
+    };
+  }
 
   openModalAdd(open) {
     this.setState({ openModal: open });
@@ -19,21 +24,31 @@ class cardBot extends Component {
         className="justify-content-md-center"
         style={{ maxWidth: "95%" }}
       >
-        <Row>
-          <Button
-            variant="warning"
-            className="mb-3"
-            style={{
-              marginLeft: "15px",
-              width: "99px",
-              backgroundColor: "rgb(241, 121, 19)",
-              color: "white"
-            }}
-            onClick={() => this.openModalAdd(true)}
-          >
-            Add
-          </Button>
-        </Row>
+        {this.state.status_user ? (
+          <Fragment>
+            {this.state.role ? (
+              <Row>
+                <Button
+                  variant="warning"
+                  className="mb-3"
+                  style={{
+                    marginLeft: "15px",
+                    width: "99px",
+                    backgroundColor: "rgb(241, 121, 19)",
+                    color: "white"
+                  }}
+                  onClick={() => this.openModalAdd(true)}
+                >
+                  Add
+                </Button>
+              </Row>
+            ) : (
+              <div className="mt-3"></div>
+            )}
+          </Fragment>
+        ) : (
+          <div className="mt-3"></div>
+        )}
 
         {/* Main CARD */}
         <Row>

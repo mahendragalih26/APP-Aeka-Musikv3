@@ -1,6 +1,7 @@
 const initialState = {
   cartList: [],
   cartDetail: [],
+  cartAdd: [],
   isLoading: false,
   isFulfilled: false,
   isRejected: false
@@ -8,20 +9,20 @@ const initialState = {
 
 const products = (state = initialState, action) => {
   switch (action.type) {
-    case "GET_WISHLIST_PENDING":
+    case "GET_CART_PENDING":
       return {
         ...state,
         isLoading: true,
         isFulfilled: false,
         isRejected: false
       };
-    case "GET_WISHLIST_REJECTED":
+    case "GET_CART_REJECTED":
       return {
         ...state,
         isLoading: false,
         isRejected: true
       };
-    case "GET_WISHLIST_FULFILLED":
+    case "GET_CART_FULFILLED":
       console.log(action.payload.data.values);
       return {
         // ...state,
@@ -29,41 +30,62 @@ const products = (state = initialState, action) => {
         isFulfilled: true,
         cartList: action.payload.data.values
       };
-    case "GET_WISHLIST_DETAIL_PENDING":
+    case "GET_CART_DETAIL_PENDING":
       return {
         ...state,
         isLoading: true,
         isFulfilled: false,
         isRejected: false
       };
-    case "GET_WISHLIST_DETAIL_REJECTED":
+    case "GET_CART_DETAIL_REJECTED":
       return {
         ...state,
         isLoading: false,
         isRejected: true
       };
-    case "GET_WISHLIST_DETAIL_FULFILLED":
-      console.log(action.payload.data.values);
+    case "GET_CART_DETAIL_FULFILLED":
+      console.log("detail cart ", action.payload.data.values);
       return {
         // ...state,
         isLoading: false,
         isFulfilled: true,
         cartDetail: action.payload.data.values
       };
-    case "ADD_WISHLIST_PENDING":
+    case "ADD_CART_PENDING":
       return {
         ...state,
         isLoading: true,
         isFulfilled: false,
         isRejected: false
       };
-    case "ADD_WISHLIST_REJECTED":
+    case "ADD_CART_REJECTED":
       return {
         ...state,
         isLoading: false,
         isRejected: true
       };
-    case "ADD_WISHLIST_FULFILLED":
+    case "ADD_CART_FULFILLED":
+      console.log(action.payload.data.values);
+      return {
+        // ...state,
+        isLoading: false,
+        isFulfilled: true,
+        cartAdd: action.payload.data.values
+      };
+    case "EDIT_CART_PENDING":
+      return {
+        ...state,
+        isLoading: true,
+        isFulfilled: false,
+        isRejected: false
+      };
+    case "EDIT_CART_REJECTED":
+      return {
+        ...state,
+        isLoading: false,
+        isRejected: true
+      };
+    case "EDIT_CART_FULFILLED":
       console.log(action.payload.data.values);
       return {
         // ...state,
@@ -71,41 +93,20 @@ const products = (state = initialState, action) => {
         isFulfilled: true,
         wishlistList: action.payload.data.values
       };
-    // case "EDIT_WISHLIST_PENDING":
-    //   return {
-    //     ...state,
-    //     isLoading: true,
-    //     isFulfilled: false,
-    //     isRejected: false
-    //   };
-    // case "EDIT_WISHLIST_REJECTED":
-    //   return {
-    //     ...state,
-    //     isLoading: false,
-    //     isRejected: true
-    //   };
-    // case "EDIT_WISHLIST_FULFILLED":
-    //   console.log(action.payload.data.values);
-    //   return {
-    //     // ...state,
-    //     isLoading: false,
-    //     isFulfilled: true,
-    //     wishlistList: action.payload.data.values
-    //   };
-    case "DELETE_WISHLIST_PENDING":
+    case "DELETE_CART_PENDING":
       return {
         ...state,
         isLoading: true,
         isFulfilled: false,
         isRejected: false
       };
-    case "DELETE_WISHLIST_REJECTED":
+    case "DELETE_CART_REJECTED":
       return {
         ...state,
         isLoading: false,
         isRejected: true
       };
-    case "DELETE_WISHLIST_FULFILLED":
+    case "DELETE_CART_FULFILLED":
       console.log(action.payload.data.values);
       return {
         // ...state,

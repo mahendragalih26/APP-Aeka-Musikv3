@@ -1,13 +1,6 @@
 import React, { Component } from "react";
 
-import {
-  Row,
-  FormControl,
-  Button,
-  Container,
-  Col,
-  InputGroup
-} from "react-bootstrap";
+import { Row, FormControl, Container, Col, InputGroup } from "react-bootstrap";
 
 class SearchBar extends Component {
   state = { search: "" };

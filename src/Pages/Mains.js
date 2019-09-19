@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 // import SearchBar from "../components/SearchBar";
 import Card from "../components/Card/CardBot";
-import {
-  Row,
-  FormControl,
-  Button,
-  Container,
-  Col,
-  InputGroup
-} from "react-bootstrap";
+// import {
+//   Row,
+//   FormControl,
+//   Button,
+//   Container,
+//   Col,
+//   InputGroup
+// } from "react-bootstrap";
 
 import { connect } from "react-redux";
 

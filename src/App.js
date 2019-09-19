@@ -8,6 +8,7 @@ import Mains from "./Pages/Mains";
 import Detail from "./Pages/Detail";
 import Checkout from "./Pages/Checkout";
 import Register from "./components/Form/Register";
+import Wishlist from "./components/Card/CardWishlist";
 
 class App extends Component {
   constructor(props) {
@@ -56,6 +57,14 @@ class App extends Component {
             path={"/register"}
             render={({ history }) => {
               return <Register history={history} />;
+            }}
+          />
+
+          <Route
+            exact={true}
+            path={"/wishlist"}
+            render={({ history }) => {
+              return <Wishlist history={history} />;
             }}
           />
 

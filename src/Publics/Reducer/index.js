@@ -6,6 +6,7 @@ import Products from "./Products";
 import Branches from "./Branches";
 import Wishlist from "./Wishlist";
 import Auth from "./Auth";
+import Cart from "./Cart";
 
 const rootReducer = combineReducers({
   Categorys,
@@ -13,7 +14,8 @@ const rootReducer = combineReducers({
   Products,
   Branches,
   Wishlist,
-  Auth
+  Auth,
+  Cart
 });
 
 export default rootReducer;

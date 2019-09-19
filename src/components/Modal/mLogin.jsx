@@ -58,8 +58,8 @@ class mLogin extends Component {
         );
         // alert("Login Berhasil Yepiee");
         SweetAlert.fire({
-          title: "Yeayy!",
-          text: `Data has been updated`,
+          title: "Yeayy! Berhasil Login",
+          text: `Selamat Datang`,
           type: "success",
           confirmButtonText: "OK",
           confirmButtonColor: "#E28935"

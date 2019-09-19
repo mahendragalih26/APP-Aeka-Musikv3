@@ -10,7 +10,7 @@ import {
   Button
 } from "react-bootstrap";
 import SweetAlert from "sweetalert2";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 
 import { connect } from "react-redux";
 import { getCategory } from "../Publics/Action/category";
@@ -20,6 +20,7 @@ import {
   deleteWishlist,
   getWishlistDetail
 } from "../Publics/Action/wishlist";
+import { addCart } from "../Publics/Action/cart";
 import { getBranch } from "../Publics/Action/branch";
 import ModalEdit from "../components/Modal/modalEdit";
 import ModalDelete from "../components/Modal/modalDelete";
@@ -39,7 +40,8 @@ class Detail extends Component {
       dataCategory: [],
       dataBranch: [],
       isWishList: false,
-      role: localStorage.getItem("level") === "user"
+      role: localStorage.getItem("level") === "admin",
+      status_user: localStorage.getItem("token") !== null
     };
   }
 
@@ -57,8 +59,8 @@ class Detail extends Component {
       },
 
       () => {
-        console.log("statenya", this.state);
-        if (this.state.dataMatch.id_product == this.state.id_detail) {
+        console.log("statenya", this.state.dataMatch.id_product);
+        if (this.state.dataMatch.id_product === this.state.id_detail) {
           this.setState({ isWishList: true });
         }
       }
@@ -73,16 +75,35 @@ class Detail extends Component {
       title: "Yeayy!",
       text: `Data has been updated`,
       type: "success",
-      confirmButtonText: "OK",
+      confirmButtonText: "Mantap coy..",
       confirmButtonColor: "#E28935"
     }).then(() => {
       setTimeout(() => {
         this.props.history.push(`/${this.state.dataProduct.category}`);
       }, 3000);
     });
-    // setTimeout(() => {
-    //   this.props.history.push(`/${this.state.dataStore.category}`);
-    // }, 3000);
+  };
+
+  handleCartAdd = () => {
+    const id_product = this.state.id_detail;
+    const id_user = localStorage.getItem("id");
+    const NewData = {
+      id_product,
+      id_user
+    };
+    console.log("cartData", NewData);
+    this.props.dispatch(addCart(NewData));
+    SweetAlert.fire({
+      title: "Yeayy!",
+      text: `Product masuk ke Cart Anda....`,
+      type: "success",
+      position: "top-end",
+      toast: true,
+      confirmButtonText: "OK",
+      confirmButtonColor: "#E28935"
+    }).then(() => {
+      window.location.reload();
+    });
   };
 
   handleWishAdd = (id_user, id_product) => {
@@ -92,6 +113,15 @@ class Detail extends Component {
     };
     this.props.dispatch(addWishlist(NewData)).then(() => {
       this.setState({ isWishList: true });
+    });
+    SweetAlert.fire({
+      title: "Yeayy!",
+      text: `Product masuk ke WishList Anda....`,
+      type: "success",
+      position: "top-end",
+      toast: true,
+      confirmButtonText: "OK",
+      confirmButtonColor: "#E28935"
     });
   };
 
@@ -139,100 +169,86 @@ class Detail extends Component {
                 <h2 href="#home">{dataProduct.name}</h2>
                 <Nav className="mr-auto"></Nav>
 
-                {this.state.role ? (
+                {this.state.status_user ? (
                   <Fragment>
-                    <span
-                      style={{
-                        cursor: "pointer",
-                        fontSize: "20px",
-                        color: "#007bff",
-                        marginRight: "20px"
-                      }}
-                    >
-                      <i className="fa fa-cart-plus"></i> Add to Cart
-                    </span>
-                    {this.state.isWishList ? (
-                      <span
-                        style={{
-                          cursor: "pointer",
-                          fontSize: "20px",
-                          color: "red"
-                        }}
-                        onClick={() => this.handleWishRemove()}
-                      >
-                        <i className="fa fa-heart"></i> Wishlist
-                      </span>
+                    {this.state.role ? (
+                      <Form inline>
+                        <div>
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            className="mr-sm-2"
+                            data-toggle="modal"
+                            data-target="#exampleModal"
+                            onClick={() =>
+                              this.openModalEdit(this.state.id_detail)
+                            }
+                          >
+                            Edit Data
+                          </Button>
+                        </div>
+                        <div>
+                          <Button
+                            variant="danger"
+                            size="sm"
+                            className="mr-sm-2"
+                            data-toggle="modal"
+                            data-target="#ModalDelete"
+                            onClick={() => this.openModalDelete()}
+                          >
+                            Delete
+                          </Button>
+                        </div>
+                      </Form>
                     ) : (
-                      <span
-                        style={{
-                          cursor: "pointer",
-                          fontSize: "20px",
-                          color: "red"
-                        }}
-                        onClick={() =>
-                          this.handleWishAdd(1, this.state.id_detail)
-                        }
-                      >
-                        <i className="fa fa-heart-o"></i> Wishlist
-                      </span>
+                      <Fragment>
+                        <span
+                          style={{
+                            cursor: "pointer",
+                            fontSize: "20px",
+                            color: "#007bff",
+                            marginRight: "20px"
+                          }}
+                          onClick={() =>
+                            this.handleCartAdd(dataProduct.id_product)
+                          }
+                        >
+                          <i className="fa fa-cart-plus"></i> Add to Cart
+                        </span>
+                        {this.state.isWishList ? (
+                          <span
+                            style={{
+                              cursor: "pointer",
+                              fontSize: "20px",
+                              color: "red"
+                            }}
+                            onClick={() => this.handleWishRemove()}
+                          >
+                            <i className="fa fa-heart"></i> Wishlist
+                          </span>
+                        ) : (
+                          <span
+                            style={{
+                              cursor: "pointer",
+                              fontSize: "20px",
+                              color: "red"
+                            }}
+                            onClick={() =>
+                              this.handleWishAdd(
+                                localStorage.getItem("id"),
+                                this.state.id_detail
+                              )
+                            }
+                          >
+                            <i className="fa fa-heart-o"></i> Wishlist
+                          </span>
+                        )}
+                      </Fragment>
                     )}
                   </Fragment>
                 ) : (
-                  <Form inline>
-                    <div>
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        className="mr-sm-2"
-                        data-toggle="modal"
-                        data-target="#exampleModal"
-                        onClick={() => this.openModalEdit(this.state.id_detail)}
-                      >
-                        Edit Data
-                      </Button>
-                    </div>
-                    <div>
-                      <Button
-                        variant="danger"
-                        size="sm"
-                        className="mr-sm-2"
-                        data-toggle="modal"
-                        data-target="#ModalDelete"
-                        onClick={() => this.openModalDelete()}
-                      >
-                        Delete
-                      </Button>
-                    </div>
-                  </Form>
+                  <div></div>
                 )}
-
-                {/* <Form inline>
-                  <div>
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      className="mr-sm-2"
-                      data-toggle="modal"
-                      data-target="#exampleModal"
-                      onClick={() => this.openModalEdit(this.state.id_detail)}
-                    >
-                      Edit Data
-                    </Button>
-                  </div>
-                  <div>
-                   
-                    <Button
-                      variant="danger"
-                      size="sm"
-                      className="mr-sm-2"
-                      data-toggle="modal"
-                      data-target="#ModalDelete"
-                      onClick={() => this.openModalDelete()}
-                    >
-                      Delete
-                    </Button>
-                  </div>
-                </Form> */}
               </Navbar>
               <p>{dataProduct.description}</p>
             </Col>
