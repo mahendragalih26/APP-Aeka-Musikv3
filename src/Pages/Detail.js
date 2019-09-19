@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import {
   Card,
   Container,
@@ -10,14 +10,22 @@ import {
   Button
 } from "react-bootstrap";
 import SweetAlert from "sweetalert2";
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import { connect } from "react-redux";
 import { getCategory } from "../Publics/Action/category";
 import { getProductsDetail, deleteProduct } from "../Publics/Action/product";
+import {
+  addWishlist,
+  deleteWishlist,
+  getWishlistDetail
+} from "../Publics/Action/wishlist";
 import { getBranch } from "../Publics/Action/branch";
 import ModalEdit from "../components/Modal/modalEdit";
 import ModalDelete from "../components/Modal/modalDelete";
+
+import NavbarTop from "../components/Navbar/NavbarTop";
+import NavbarBot from "../components/Navbar/NavbarBot";
 
 class Detail extends Component {
   constructor(props) {
@@ -27,21 +35,37 @@ class Detail extends Component {
       openModalEdit: false,
       ModalDelete: false,
       dataProduct: [],
+      dataMatch: "",
       dataCategory: [],
-      dataBranch: []
+      dataBranch: [],
+      isWishList: false,
+      role: localStorage.getItem("level") === "user"
     };
   }
 
   componentDidMount = async () => {
     await this.props.dispatch(getCategory());
     await this.props.dispatch(getProductsDetail(this.state.id_detail));
+    await this.props.dispatch(getWishlistDetail(this.state.id_detail));
     await this.props.dispatch(getBranch());
-    this.setState({
-      dataProduct: this.props.data.Products.productsList[0],
-      dataCategory: this.props.data.Categorys.categoryList,
-      dataBranch: this.props.data.Branches.branchList
-    });
+    this.setState(
+      {
+        dataMatch: this.props.dataWishlist,
+        dataProduct: this.props.data.Products.productsList[0],
+        dataCategory: this.props.data.Categorys.categoryList,
+        dataBranch: this.props.data.Branches.branchList
+      },
+
+      () => {
+        console.log("statenya", this.state);
+        if (this.state.dataMatch.id_product == this.state.id_detail) {
+          this.setState({ isWishList: true });
+        }
+      }
+    );
   };
+
+  // Big Function
 
   DeleteMain = async () => {
     await this.props.dispatch(deleteProduct(this.state.id_detail));
@@ -61,6 +85,23 @@ class Detail extends Component {
     // }, 3000);
   };
 
+  handleWishAdd = (id_user, id_product) => {
+    const NewData = {
+      id_user,
+      id_product
+    };
+    this.props.dispatch(addWishlist(NewData)).then(() => {
+      this.setState({ isWishList: true });
+    });
+  };
+
+  handleWishRemove = () => {
+    this.props.dispatch(deleteWishlist(this.state.dataMatch.id)).then(() => {
+      this.setState({ isWishList: false });
+    });
+  };
+
+  // Low Function
   openModalEdit() {
     this.setState({ openModalEdit: true });
   }
@@ -71,14 +112,18 @@ class Detail extends Component {
 
   render() {
     const { dataProduct } = this.state;
+    const { dataWishlist } = this.props;
     const { dataCategory } = this.state;
     const { dataBranch } = this.state;
     console.log("state deletemodal", this.state.openModalDelete);
+    console.log("localstorage = ", localStorage.getItem("name"));
 
     // const [modalShowDelete, setModalDelete] = React.useState(false);
-    console.log("data API = ", dataProduct);
+    // console.log("data API = ", dataWishlist);
+    console.log("data API wishkash= ", dataWishlist);
     return (
       <React.Fragment>
+        <NavbarTop />
         <Container key={dataProduct.id} className="mt-4">
           <Row>
             <Col xs={6} md={4}>
@@ -91,9 +136,77 @@ class Detail extends Component {
             </Col>
             <Col xs={6} md={8}>
               <Navbar>
-                <Navbar.Brand href="#home">{dataProduct.name}</Navbar.Brand>
+                <h2 href="#home">{dataProduct.name}</h2>
                 <Nav className="mr-auto"></Nav>
-                <Form inline>
+
+                {this.state.role ? (
+                  <Fragment>
+                    <span
+                      style={{
+                        cursor: "pointer",
+                        fontSize: "20px",
+                        color: "#007bff",
+                        marginRight: "20px"
+                      }}
+                    >
+                      <i className="fa fa-cart-plus"></i> Add to Cart
+                    </span>
+                    {this.state.isWishList ? (
+                      <span
+                        style={{
+                          cursor: "pointer",
+                          fontSize: "20px",
+                          color: "red"
+                        }}
+                        onClick={() => this.handleWishRemove()}
+                      >
+                        <i className="fa fa-heart"></i> Wishlist
+                      </span>
+                    ) : (
+                      <span
+                        style={{
+                          cursor: "pointer",
+                          fontSize: "20px",
+                          color: "red"
+                        }}
+                        onClick={() =>
+                          this.handleWishAdd(1, this.state.id_detail)
+                        }
+                      >
+                        <i className="fa fa-heart-o"></i> Wishlist
+                      </span>
+                    )}
+                  </Fragment>
+                ) : (
+                  <Form inline>
+                    <div>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        className="mr-sm-2"
+                        data-toggle="modal"
+                        data-target="#exampleModal"
+                        onClick={() => this.openModalEdit(this.state.id_detail)}
+                      >
+                        Edit Data
+                      </Button>
+                    </div>
+                    <div>
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        className="mr-sm-2"
+                        data-toggle="modal"
+                        data-target="#ModalDelete"
+                        onClick={() => this.openModalDelete()}
+                      >
+                        Delete
+                      </Button>
+                    </div>
+                  </Form>
+                )}
+
+                {/* <Form inline>
                   <div>
                     <Button
                       variant="secondary"
@@ -107,7 +220,7 @@ class Detail extends Component {
                     </Button>
                   </div>
                   <div>
-                    {/* <a href="/violin" onClick={() => this.openModalDelete()}> */}
+                   
                     <Button
                       variant="danger"
                       size="sm"
@@ -118,9 +231,8 @@ class Detail extends Component {
                     >
                       Delete
                     </Button>
-                    {/* </a> */}
                   </div>
-                </Form>
+                </Form> */}
               </Navbar>
               <p>{dataProduct.description}</p>
             </Col>
@@ -193,6 +305,7 @@ class Detail extends Component {
           history={this.props.history}
           hide={() => this.setState({ ModalDelete: false })}
         />
+        <NavbarBot />
       </React.Fragment>
     );
   }
@@ -200,7 +313,8 @@ class Detail extends Component {
 
 const mapStateToProps = state => {
   return {
-    data: state
+    data: state,
+    dataWishlist: state.Wishlist.wishlistDetail
   };
 };
 

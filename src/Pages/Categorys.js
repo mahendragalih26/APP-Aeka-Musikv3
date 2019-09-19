@@ -5,6 +5,8 @@ import CardBar from "../components/Card/Card";
 import { connect } from "react-redux";
 
 import { getCategory } from "../Publics/Action/category";
+import NavbarTop from "../components/Navbar/NavbarTop";
+import NavbarBot from "../components/Navbar/NavbarBot";
 
 class Category extends Component {
   state = {
@@ -23,9 +25,11 @@ class Category extends Component {
     console.log("data API = ", this.props.data.Categorys.categoryList);
     return (
       <div>
+        <NavbarTop />
         {/* <SearchBar /> */}
         <div className="mt-3"></div>
         <CardBar data={dataStore} />
+        <NavbarBot />
       </div>
     );
   }

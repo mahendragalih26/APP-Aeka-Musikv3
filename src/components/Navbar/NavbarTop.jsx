@@ -24,7 +24,8 @@ class NavbarTop extends Component {
     super();
     this.state = {
       openLogin: false,
-      openCart: false
+      openCart: false,
+      status_user: localStorage.getItem("token") !== null
     };
   }
 
@@ -113,10 +114,14 @@ class NavbarTop extends Component {
             </Navbar.Text>
           </Navbar.Collapse>
         </Navbar>
+
+        {/* Modal Login */}
         <LoginModal
           open={this.state.openLogin}
           hide={() => this.setState({ openLogin: false })}
         />
+
+        {/* Content Cart */}
         <SlidingPane
           closeIcon={
             <div>
